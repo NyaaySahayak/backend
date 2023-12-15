@@ -9,8 +9,9 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 app.use(cors());
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
+db.once('open', async () => {
   console.log('Connected to MongoDB Atlas');
+  
   app.get('/data', async (req, res) => {
     try {
       const queCollection = db.collection('que');
