@@ -23,6 +23,7 @@ db.once('open', async () => {
       res.status(500).json({ error: 'Error fetching data from MongoDB' });
     }
   });
+
   app.listen(process.env.PORT, () => {
     console.log(`Server is running at http://localhost:${process.env.PORT}`);
   });
