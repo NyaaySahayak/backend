@@ -19,13 +19,13 @@ router.post("/api/login", async (req, res) => {
 
         if (passwordMatch) {
             const token = jwt.sign({ email }, process.env.SECRET, { expiresIn: "1800s" });
-            
+
             const sanitizedUser = {
-                _id: user._id,  
+                _id: user._id,
                 name: user.name,
                 email: user.email,
             };
-            return res.status(200).json({ message: "User verified",User: sanitizedUser, token });
+            return res.status(200).json({ message: "User verified", User: sanitizedUser, token });
         } else {
             return res.status(401).json({ message: "Invalid Credentials" });
         }
@@ -34,46 +34,31 @@ router.post("/api/login", async (req, res) => {
     }
 });
 
+
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
+  
     //Extracting token from authorization header
     const token = authHeader && authHeader.split(" ")[1];
+  
     //Checking if the token is null
     if (!token) {
-        return res.status(401).send("Authorization failed. No access token.");
+      return res.status(401).send("Authorization failed. No access token.");
     }
+  
     //Verifying if the token is valid.
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            console.log(err);
-            return res.status(403).send("Could not verify token");
-        }
-        req.user = user;
+    jwt.verify(token, process.env.SECRET, (err, user) => {
+      if (err) {
+        console.log(err);
+        return res.status(403).send("Could not verify token");
+      }
+      req.user = user;
     });
     next();
-};
-
+  };
 
 router.get("/test", authenticateToken, (req, res) => {
-    res.json({"message": "User authorized"});
-});
-
-
-router.post("/token", (req, res) => {
-    const refreshToken = req.body.token;
-    if (refreshToken == null) {
-      return res.status(401).send("No refresh token provided!");
-    }
-    if (!refreshTokens.includes(refreshToken)) {
-      return res.status(403).send("Invalid Refresh Token");
-    }
-  
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if (err) return res.status(403).send("Could not Verify Refresh Token");
-  
-      const token = jwt.sign({email: req.body.email}, process.env.JWT_SECRET, { expiresIn: "10s" })
-      res.json({ accessToken: token });
-    });
+    res.send("Token Verified, Authorizing User...");
   });
 
 module.exports = router;
