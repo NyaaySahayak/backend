@@ -23,7 +23,7 @@ mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB');
-    app.use(authRoutes);
+    app.use('/',authRoutes);
     app.use('/',dataRoutes);
     app.listen(process.env.PORT, () => {
       console.log(`Server is running at http://localhost:${process.env.PORT}`);

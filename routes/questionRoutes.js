@@ -5,10 +5,10 @@ const Question = require("../models/question_model");
 
 const db = mongoose.connection;
 
-router.get('/', async (req, res) => {
-  res.json("hello!World")
-});
-
+// router.get('/', async (req, res) => {
+//   res.json("hello!World")
+// });
+  
 router.post('/data', async (req,res)=>{
   const { question , answer} = req.body;
   try{
@@ -23,7 +23,7 @@ router.post('/data', async (req,res)=>{
 router.put('/data', async (req,res)=>{
   const {question , answer , _id} = req.body;
   try{
-    const data = await Question.findById(_id, {question, answer})
+    const data = await Question.findByIdAndUpdate(_id, {question, answer})
     if (!data) {
       res.status(500).json({ error: 'Data not Found' });
     }
@@ -47,4 +47,4 @@ router.get('/data', async (req, res) => {
   }
 });
 
-module.exports = router
+module.exports = router;
