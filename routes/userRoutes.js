@@ -38,36 +38,23 @@ router.get('/api/getusers', async (req, res) => {
   }
 });
 
-router.post("/api/change-password" , async (req, res) => {
+//delete a user
+router.delete('/api/user', async (req, res) => {
+  const UserId = req.body.id;
   try {
-    // Extracting new password, old password, and email from the req.body object
-    const { newpassword, oldpassword, email } = req.body;
+    // Find and delete the question from the database
+    const deletedUser = await User.findByIdAndDelete(UserId);
 
-    // Checking if user exists in the database
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
-    // Comparing provided old password with the hashed password stored in the database
-    const oldPasswordMatch = await bcrypt.compare(oldpassword, user.password);
-
-    if (oldPasswordMatch) {
-      // Hashing the new password
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(newpassword, saltRounds);
-
-      // Updating the user with the new hashed password
-      await User.findByIdAndUpdate(user._id, { password: hashedPassword });
-
-      return res.status(200).json({ message: "Password changed successfully" });
+    if (deletedUser) {
+      res.status(200).json({ message: 'User deleted successfully' });
     } else {
-      return res.status(401).json({ message: "Invalid old password" });
+      res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 router.post("/api/login", async (req, res) => {
   try {
@@ -99,10 +86,16 @@ router.post("/api/login", async (req, res) => {
   }
 });
 
+
+
 router.post("/api/register", async (req, res) => {
   try {
     //Extracting email and password from the req.body object
-    const { email, password, role } = req.body;
+    const { email, password, role, name, age,
+      specilization,
+      city,
+      contact,
+      address, } = req.body;
     //Checking if email is already in use
     let userExists = await User.findOne({ email });
     if (userExists) {
@@ -118,6 +111,12 @@ router.post("/api/register", async (req, res) => {
       let user = new User({
         role,
         email,
+        name,
+        age,
+        specilization,
+        city,
+        contact,
+        address,
         password: hash,
       });
       //Saving user to database

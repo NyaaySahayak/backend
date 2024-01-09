@@ -5,9 +5,6 @@ const Question = require("../models/question_model");
 
 const db = mongoose.connection;
 
-// router.get('/', async (req, res) => {
-//   res.json("hello!World")
-// });
   
 router.post('/data', async (req,res)=>{
   const { question , answer} = req.body;
