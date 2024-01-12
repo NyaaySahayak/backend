@@ -6,10 +6,11 @@ const User = new mongoose.Schema({
     role: {type: String, required: true},
     name: { type: String},
     age: {type: Number},
-    specilization: {type: String},
+    speciality: {type: String},
     city: {type: String},
     contact: {type: String},
-    address: {type: String}
+    createdAt: {type: Date,default: Date.now,},
+    
 },{
     collection: 'user-data'
 })

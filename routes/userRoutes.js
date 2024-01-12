@@ -30,9 +30,10 @@ const authenticateToken = (req, res, next) => {
 router.get('/api/getusers', async (req, res) => {
   try {
     const role = "advocate";
-    const advocates = await User.find({ role });
-    console.log(advocates);
-    res.json(advocates);
+    const advocates = await User.find({ role }).select('name email age contact city speciality').sort({ createdAt: -1 });
+    
+    res.status(200).json(advocates);
+
   } catch (error) {
     res.status(401).send(error.message);
   }
@@ -40,10 +41,10 @@ router.get('/api/getusers', async (req, res) => {
 
 //delete a user
 router.delete('/api/user', async (req, res) => {
-  const UserId = req.body.id;
+  const UserEmail = req.body.email;
   try {
     // Find and delete the question from the database
-    const deletedUser = await User.findByIdAndDelete(UserId);
+    const deletedUser = await User.findOneAndDelete({email: UserEmail});
 
     if (deletedUser) {
       res.status(200).json({ message: 'User deleted successfully' });
@@ -92,10 +93,10 @@ router.post("/api/register", async (req, res) => {
   try {
     //Extracting email and password from the req.body object
     const { email, password, role, name, age,
-      specilization,
+      speciality,
       city,
       contact,
-      address, } = req.body;
+      } = req.body;
     //Checking if email is already in use
     let userExists = await User.findOne({ email });
     if (userExists) {
@@ -113,15 +114,14 @@ router.post("/api/register", async (req, res) => {
         email,
         name,
         age,
-        specilization,
+        speciality,
         city,
         contact,
-        address,
         password: hash,
       });
       //Saving user to database
       user.save().then(() => {
-        return res.json({ message: "User created successfully please Login", user });
+        return res.json({ message: "User created successfully" });
       });
     });
   } catch (err) {

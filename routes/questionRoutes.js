@@ -36,7 +36,7 @@ router.get('/data', async (req, res) => {
   try {
     const queCollection = db.collection('que');
     const data = await queCollection.find({}).toArray();
-    console.log('Fetched data:', data);
+    // console.log('Fetched data:', data);
     res.json(data);
   } catch (error) {
     console.error('Error fetching data from MongoDB:', error);
