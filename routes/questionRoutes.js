@@ -5,27 +5,42 @@ const Question = require("../models/question_model");
 
 const db = mongoose.connection;
 
-  
-router.post('/data', async (req,res)=>{
-  const { question , answer} = req.body;
-  try{
-    const data = await Question.create({question, answer });
+
+router.post('/data', async (req, res) => {
+  const { question, answer } = req.body;
+  try {
+    const data = await Question.create({ question, answer });
     res.status(200).json(data);
-  }catch(error){
+  } catch (error) {
     console.error('Error fetching data from MongoDB:', error);
     res.status(500).json({ error: 'Error fetching data from MongoDB' });
   }
 });
 
-router.put('/data', async (req,res)=>{
-  const {question , answer , _id} = req.body;
-  try{
-    const data = await Question.findByIdAndUpdate(_id, {question, answer})
+router.delete('/data', async (req, res) => {
+  const question = req.body.question;
+  try {
+    const deletedquestion = await Question.findOneAndDelete({ question: question });
+    if (deletedquestion) {
+      res.status(200).json({ message: 'Question deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Question not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+router.put('/data', async (req, res) => {
+  const { question, answer, _id } = req.body;
+  try {
+    const data = await Question.findByIdAndUpdate(_id, { question, answer })
     if (!data) {
       res.status(500).json({ error: 'Data not Found' });
     }
     res.status(200).json(data)
-  }catch(error){
+  } catch (error) {
     console.error('Error fetching data from MongoDB:', error);
     res.status(500).json({ error: 'Error fetching data from MongoDB' });
   }
@@ -34,8 +49,8 @@ router.put('/data', async (req,res)=>{
 
 router.get('/data', async (req, res) => {
   try {
-    const queCollection = db.collection('que');
-    const data = await queCollection.find({}).toArray();
+    // const queCollection = db.collection('que');
+    const data = await Question.find({});
     // console.log('Fetched data:', data);
     res.json(data);
   } catch (error) {
