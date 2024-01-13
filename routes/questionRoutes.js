@@ -50,7 +50,7 @@ router.put('/data', async (req, res) => {
 router.get('/data', async (req, res) => {
   try {
     // const queCollection = db.collection('que');
-    const data = await Question.find({});
+    const data = await Question.find({}).sort({createdAt: -1});
     // console.log('Fetched data:', data);
     res.json(data);
   } catch (error) {
