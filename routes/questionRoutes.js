@@ -44,7 +44,7 @@ router.put('/data', async (req, res) => {
     console.error('Error fetching data from MongoDB:', error);
     res.status(500).json({ error: 'Error fetching data from MongoDB' });
   }
-});
+}); 
 
 
 router.get('/data', async (req, res) => {
