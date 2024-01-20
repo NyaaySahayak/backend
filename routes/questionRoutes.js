@@ -3,7 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose')
 const Question = require("../models/question_model");
 
-const db = mongoose.connection;
 
 
 router.post('/data', async (req, res) => {
