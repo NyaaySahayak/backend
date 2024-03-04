@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose')
 const Question = require("../models/question_model");
 
 
 
 router.post('/data', async (req, res) => {
-  const { question, answer } = req.body;
+  const { question, answer, category } = req.body;
   try {
-    const data = await Question.create({ question, answer });
+    const data = await Question.create({ question, answer , category});
     res.status(200).json(data);
   } catch (error) {
     console.error('Error fetching data from MongoDB:', error);
